@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 100, 0.2, 100 )
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0.109804, 0.231373, 0.505882, 1 )
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 50, 0.1, 50 )
+
+[sub_resource type="CubeMesh" id=4]
+size = Vector3( 100, 2, 2 )
+
+[sub_resource type="BoxShape" id=5]
+extents = Vector3( 50, 1, 1 )
+
+[node name="Main" type="Spatial"]
+
+[node name="Ground" type="Spatial" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="Ground"]
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="StaticBody" type="StaticBody" parent="Ground/MeshInstance"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Ground/MeshInstance/StaticBody"]
+shape = SubResource( 3 )
+
+[node name="Wall1" type="MeshInstance" parent="Ground"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 48.4909 )
+mesh = SubResource( 4 )
+
+[node name="StaticBody" type="StaticBody" parent="Ground/Wall1"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Ground/Wall1/StaticBody"]
+shape = SubResource( 5 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]

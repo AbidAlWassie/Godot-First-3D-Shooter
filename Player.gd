@@ -1,8 +1,9 @@
 extends KinematicBody
 
-export var speed := 50
+export var speed := 14
 export var jump_strength := 20
 export var gravity := 50
+export var damage := 25
 
 export(NodePath) var animationTree
 
@@ -13,6 +14,7 @@ var snap_vector := Vector3.DOWN
 
 onready var spring_arm: SpringArm = $SpringArm
 onready var model: Spatial = $AstronautSkin
+onready var aimcast: RayCast = $SpringArm/Camera/RayCast
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -41,14 +43,22 @@ func _physics_process(delta: float) -> void:
 		var look_direction = Vector2(velocity.z, velocity.x)
 		model.rotation.y = look_direction.angle()
 		
+	if Input.is_action_just_pressed("fire"):
+		if aimcast.is_colliding():
+			var target = aimcast.get_collider()
+			if target.is_in_group("Enemy"):
+				print("shot enemy");
+				target.health -= damage
+		
 	if Input.is_action_pressed("forward") or Input.is_action_pressed("back") or Input.is_action_pressed("right") or Input.is_action_pressed("left"):
 		_anim_tree["parameters/playback"].travel("move")
+		print("moving")
 	elif Input.is_action_pressed("jump"):
 		_anim_tree["parameters/playback"].travel("jump")
-		
+		print("jumping")
 	else:
 		_anim_tree["parameters/playback"].travel("idle")
-		
+		print("idle")
 	
 func _process(_delta: float) -> void:
 	spring_arm.translation = translation
